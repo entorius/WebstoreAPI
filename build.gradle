@@ -1,0 +1,77 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.1'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.liquibase.gradle' version '2.0.4'
+}
+
+group = 'com.sld'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	postgresqlVersion = '42.4.3'
+	liquibaseCoreVersion = '4.17.2'
+	liquibasePropsFile = 'src/main/resources/db.properties'
+	mybatisVersion = '3.0.1'
+}
+
+def props = new Properties()
+file(project.ext.liquibasePropsFile).withInputStream { props.load(it) }
+
+liquibase {
+	activities {
+		main {
+			changeLogFile props["datasource.change-log"]
+			url props["datasource.url"]
+			username props["datasource.username"]
+			password props["datasource.password"]
+			defaultSchemaName props["datasource.schema"]
+			classpath "$rootDir/src/main/resources"
+		}
+	}
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation "org.springframework:spring-context"
+
+	implementation "org.postgresql:postgresql:${postgresqlVersion}"
+	implementation "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+	implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisVersion}"
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
+	implementation 'me.paulschwarz:spring-dotenv:2.4.1'
+
+	liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+	liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:2.1.1"
+	liquibaseRuntime "org.postgresql:postgresql:${postgresqlVersion}"
+
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	developmentOnly('org.springframework.boot:spring-boot-devtools')
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.security:spring-security-test')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

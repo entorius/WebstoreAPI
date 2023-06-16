@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "application",
+      "type": "com.sld.webstore.config.ApplicationProperties",
+      "sourceType": "com.sld.webstore.config.ApplicationProperties"
+    },
+    {
+      "name": "spring.liquibase",
+      "type": "com.sld.webstore.config.LiquibaseConfig",
+      "sourceType": "com.sld.webstore.config.LiquibaseConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.audience",
+      "type": "java.lang.String",
+      "sourceType": "com.sld.webstore.config.ApplicationProperties"
+    },
+    {
+      "name": "application.client-origin-url",
+      "type": "java.lang.String",
+      "sourceType": "com.sld.webstore.config.ApplicationProperties"
+    }
+  ],
+  "hints": []
+}
